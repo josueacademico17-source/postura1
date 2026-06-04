@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Inspector Postural · Salva la Empresa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+:root{
+  --cream:#FFF8EE;--sand:#F5E6C8;--border:#E8D5B0;
+  --teal:#5DCAA5;--teal-d:#1D9E75;--teal-dd:#0F6E56;
+  --red:#E24B4A;--orange:#EF9F27;--gold:#BA7517;
+  --blue:#378ADD;--pink:#D4537E;--purple:#7F77DD;
+  --text:#3a2a1a;--muted:#a07040;--light:#7a5a3a;
+  --white:#fff;
+  --font:'Nunito',sans-serif;--mono:'Space Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{background:#1a1a2e;font-family:var(--font);}
+
+.screen{display:none;position:fixed;inset:0;align-items:center;justify-content:center;}
+.screen.active{display:flex;}
+
+/* ===== LOGIN ===== */
+#login-screen{
+  background:radial-gradient(ellipse at 30% 40%, #1a4a35 0%, #1a1a2e 60%);
+  flex-direction:column;gap:20px;
+}
+.login-hero{text-align:center;color:#fff;max-width:400px;}
+.login-hero-emoji{font-size:56px;display:block;margin-bottom:12px;}
+.login-hero h1{font-size:28px;font-weight:900;margin-bottom:6px;}
+.login-hero p{font-size:13px;opacity:.7;line-height:1.6;}
+.login-box{
+  background:var(--cream);border-radius:20px;padding:28px 32px;
+  max-width:380px;width:90%;border:2px solid var(--border);
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.login-input{
+  width:100%;padding:11px 14px;border-radius:10px;border:2px solid var(--border);
+  background:#fff;font-family:var(--font);font-size:14px;color:var(--text);
+  margin-bottom:10px;outline:none;transition:border-color .2s;
+}
+.login-input:focus{border-color:var(--teal);}
+.btn-primary{
+  width:100%;padding:13px;background:var(--teal-d);color:#fff;
+  border:none;border-radius:12px;font-family:var(--font);font-size:15px;font-weight:800;
+  cursor:pointer;transition:background .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-primary:hover{background:var(--teal-dd);}
+.btn-primary:active{transform:scale(.98);}
+.login-links{display:flex;gap:12px;justify-content:center;margin-top:14px;}
+.login-link{font-size:12px;color:var(--teal-d);cursor:pointer;font-weight:700;background:none;border:none;font-family:var(--font);}
+.login-link:hover{text-decoration:underline;}
+
+/* ===== MENU ===== */
+#menu-screen{background:radial-gradient(ellipse at 70% 30%,#1a4a35,#1a1a2e 70%);flex-direction:column;gap:16px;}
+.menu-card{background:var(--cream);border-radius:20px;padding:28px;max-width:500px;width:90%;border:2px solid var(--border);box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.menu-header{text-align:center;margin-bottom:22px;}
+.menu-title{font-size:24px;font-weight:900;color:var(--text);}
+.menu-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.menu-user{font-size:13px;color:var(--teal-d);font-weight:700;margin-top:6px;}
+.menu-btns{display:flex;flex-direction:column;gap:9px;}
+.menu-btn{
+  display:flex;align-items:center;gap:12px;padding:13px 16px;
+  background:#fff;border:2px solid var(--border);border-radius:12px;
+  cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;color:var(--text);
+  transition:border-color .15s,background .15s,transform .1s;text-align:left;width:100%;
+}
+.menu-btn:hover{border-color:var(--teal);background:#F0FBF6;}
+.menu-btn:active{transform:scale(.98);}
+.menu-btn i{font-size:22px;color:var(--teal-d);}
+.menu-btn-desc{font-size:11px;color:var(--muted);font-weight:500;}
+
+/* ===== INFO SCREENS ===== */
+#instr-screen,#catalog-screen{
+  overflow:hidden;flex-direction:column;align-items:stretch;
+  background:radial-gradient(ellipse at 30% 70%,#1a4a35,#1a1a2e 70%);
+}
+.sticky-topbar{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;background:rgba(26,74,53,.97);
+  border-bottom:2px solid rgba(93,202,165,.3);flex-shrink:0;
+}
+.back-btn-sticky{
+  display:flex;align-items:center;gap:6px;padding:8px 14px;
+  background:rgba(93,202,165,.2);border:2px solid var(--teal);border-radius:10px;
+  color:#fff;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;
+  transition:background .15s;
+}
+.back-btn-sticky:hover{background:rgba(93,202,165,.35);}
+.sticky-title{color:#fff;font-size:15px;font-weight:800;}
+.info-scroll{flex:1;overflow-y:auto;padding:20px;}
+.info-card{background:var(--cream);border-radius:16px;padding:24px;max-width:600px;width:100%;border:2px solid var(--border);margin:0 auto;}
+.info-h1{font-size:18px;font-weight:900;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.info-section{margin-bottom:18px;}
+.info-sh{font-size:11px;font-weight:800;color:var(--teal-d);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.info-list{display:flex;flex-direction:column;gap:7px;}
+.info-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:#fff;border-radius:10px;border:1.5px solid var(--border);}
+.info-item i{color:var(--teal-d);font-size:16px;flex-shrink:0;margin-top:1px;}
+.info-item p{font-size:12.5px;color:var(--text);line-height:1.5;}
+.info-item b{color:var(--teal-d);}
+.kbd2{display:inline-block;padding:2px 7px;background:#fff;border:1.5px solid var(--border);border-radius:5px;font-family:var(--mono);font-size:11px;color:var(--light);}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.cat-item{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:12px;}
+.cat-item-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.cat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cat-icon i{font-size:19px;}
+.cat-name{font-size:13px;font-weight:800;color:var(--text);}
+.cat-area{font-size:10px;color:var(--muted);}
+.cat-tip{display:flex;gap:7px;font-size:11px;color:var(--light);line-height:1.4;margin-bottom:4px;}
+.cat-tip::before{content:'✓';color:var(--teal-d);font-weight:700;flex-shrink:0;}
+.cat-warn{display:flex;gap:7px;font-size:11px;color:#791F1F;line-height:1.4;margin-bottom:4px;}
+.cat-warn::before{content:'✗';font-weight:700;flex-shrink:0;}
+
+/* ===== GAME ===== */
+#game-screen{flex-direction:column;align-items:stretch;}
+#game-wrap{
+  width:100%;max-width:960px;height:100vh;max-height:700px;
+  background:var(--cream);border-radius:0;overflow:hidden;
+  display:flex;flex-direction:column;
+  border:2px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  margin:auto;
+}
+@media(min-width:600px){#game-wrap{border-radius:20px;height:calc(100vh - 32px);}}
+
+/* Mission bar */
+#mission-bar{
+  background:#FEF3CD;border-bottom:2px solid #F5C45A;
+  padding:5px 14px;font-size:11px;color:#633806;font-weight:700;
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+  animation:missionPulse 3s ease-in-out infinite;
+}
+@keyframes missionPulse{0%,100%{background:#FEF3CD;}50%{background:#FDE99B;}}
+#mission-bar i{color:var(--gold);font-size:14px;}
+
+/* Top bar */
+#topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 12px;background:var(--teal-dd);flex-shrink:0;
+}
+#tb-brand{display:flex;align-items:center;gap:8px;}
+#tb-icon{width:30px;height:30px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+#tb-icon i{color:#fff;font-size:15px;}
+#tb-title{font-size:12px;font-weight:800;color:#fff;}
+#tb-sub{font-size:9px;color:rgba(255,255,255,.6);}
+#tb-stats{display:flex;gap:5px;flex-wrap:wrap;}
+.ts{
+  display:flex;align-items:center;gap:4px;padding:4px 8px;
+  background:rgba(255,255,255,.15);border-radius:20px;
+  font-size:10px;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2);
+}
+.ts b{color:#fff;font-size:11px;}
+.ts.earning{animation:earningFlash .5s ease-out;}
+@keyframes earningFlash{0%{background:rgba(93,202,165,.6);transform:scale(1.1);}100%{background:rgba(255,255,255,.15);transform:scale(1);}}
+
+/* Prod bar */
+#prod-bar-wrap{height:6px;background:#0F6E56;flex-shrink:0;position:relative;}
+#prod-bar{height:100%;transition:width .5s,background .5s;}
+
+/* Layout */
+#layout{display:flex;flex:1;overflow:hidden;min-height:0;}
+#map-wrap{flex:1;position:relative;overflow:hidden;background:var(--sand);cursor:crosshair;min-width:0;}
+canvas{display:block;width:100%;height:100%;image-rendering:pixelated;}
+
+/* Side */
+#side{width:210px;display:flex;flex-direction:column;background:var(--cream);border-left:2px solid var(--border);flex-shrink:0;}
+#side-tabs{display:flex;border-bottom:2px solid var(--border);}
+.stab{flex:1;padding:7px 2px;font-size:10px;font-weight:700;color:var(--muted);background:transparent;border:none;cursor:pointer;text-align:center;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:var(--font);}
+.stab.on{color:var(--teal-d);border-bottom-color:var(--teal-d);background:#F0FBF6;}
+#side-body{flex:1;overflow-y:auto;padding:9px;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* Worker cards */
+.wcard{background:#fff;border-radius:10px;border:2px solid var(--border);padding:8px 10px;margin-bottom:7px;cursor:pointer;transition:border-color .15s,transform .1s;}
+.wcard:hover{border-color:var(--teal);transform:translateY(-1px);}
+.wcard.sel{border-color:var(--teal-d);background:#F0FBF6;}
+.wcard.crit{border-color:var(--red);animation:critPulse 1.2s infinite;}
+.wcard.fixed{border-color:#1D9E75;background:#F0FBF6;}
+@keyframes critPulse{0%,100%{box-shadow:0 0 0 0 rgba(226,75,74,.4);}50%{box-shadow:0 0 0 6px rgba(226,75,74,0);}}
+.wcard-top{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+.wav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;border:2px solid;}
+.wname{font-size:12px;font-weight:700;color:var(--text);}
+.warea{font-size:9px;color:var(--muted);}
+.hbar{height:5px;background:var(--sand);border-radius:3px;overflow:hidden;margin-bottom:2px;}
+.hfill{height:100%;border-radius:3px;transition:width .3s;}
+.hlbl{font-size:10px;text-align:right;}
+.alert-badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:5px;}
+.fixed-badge{background:var(--teal-d);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:5px;}
+
+/* Metrics */
+.smetric{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.sml{font-size:11px;color:var(--light);width:58px;flex-shrink:0;}
+.smbw{flex:1;height:7px;background:var(--sand);border-radius:4px;overflow:hidden;}
+.smb{height:100%;border-radius:4px;transition:width .3s;}
+.smv{font-size:11px;font-weight:600;width:26px;text-align:right;}
+
+/* Fix buttons */
+.fix-btn{
+  display:flex;align-items:center;gap:6px;width:100%;padding:7px 9px;margin-bottom:5px;
+  background:var(--cream);border:1.5px solid var(--border);border-radius:9px;
+  cursor:pointer;font-size:11px;color:var(--text);text-align:left;font-family:var(--font);
+  transition:background .15s,border-color .15s;
+}
+.fix-btn:hover:not(:disabled){background:#E0FFF5;border-color:var(--teal);color:var(--teal-dd);}
+.fix-btn:disabled{opacity:.35;cursor:default;}
+.fp{margin-left:auto;font-weight:700;color:var(--gold);font-size:11px;}
+.reward-tag{margin-left:4px;font-size:9px;font-weight:700;color:var(--teal-d);background:#E1F5EE;padding:2px 4px;border-radius:4px;}
+
+/* Notification */
+.notif{background:#E1F5EE;border:1.5px solid #9FE1CB;border-radius:9px;padding:7px 10px;font-size:11px;color:var(--teal-dd);margin-bottom:8px;display:none;line-height:1.4;}
+.notif.on{display:block;}
+.notif.warn{background:#FEF3CD;border-color:#F5C45A;color:#7A4F00;}
+.notif.bad{background:#FCEBEB;border-color:#F7C1C1;color:#791F1F;}
+
+/* Badge */
+.badge{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;}
+.b-ok{background:#EAF3DE;color:#27500A;}
+.b-warn{background:#FAEEDA;color:#633806;}
+.b-bad{background:#FCEBEB;color:#791F1F;}
+
+/* Bottom bar */
+#bottombar{padding:5px 12px;background:var(--teal-dd);font-size:10px;color:rgba(255,255,255,.6);display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex-shrink:0;}
+.kbd{display:inline-block;padding:1px 5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:4px;font-size:9px;font-weight:600;color:#fff;font-family:var(--mono);}
+
+/* Mobile */
+#mobile-controls{display:none;flex-shrink:0;}
+#dpad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:8px;background:var(--teal-dd);}
+.dpad-btn{
+  padding:12px 0;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;
+  font-size:16px;cursor:pointer;font-family:var(--font);user-select:none;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  -webkit-user-select:none;touch-action:none;transition:background .1s;
+}
+.dpad-btn:active{background:rgba(93,202,165,.4);}
+.dpad-center{font-size:10px;font-weight:800;color:var(--teal);border-color:var(--teal);}
+#scan-fab{
+  display:none;position:absolute;bottom:16px;right:12px;
+  width:54px;height:54px;background:var(--teal-d);border:none;border-radius:50%;
+  box-shadow:0 4px 20px rgba(29,158,117,.6);cursor:pointer;
+  align-items:center;justify-content:center;z-index:10;
+}
+#scan-fab i{color:#fff;font-size:24px;}
+#scan-fab:active{transform:scale(.93);}
+
+/* MODAL */
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--cream);border-radius:18px;padding:30px;max-width:320px;width:90%;border:2px solid var(--border);text-align:center;}
+.modal-icon{font-size:52px;margin-bottom:12px;}
+.modal-title{font-size:20px;font-weight:900;color:var(--text);margin-bottom:8px;}
+.modal-msg{font-size:13px;color:var(--light);margin-bottom:22px;line-height:1.5;}
+.modal-stats{display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.modal-stat{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:11px;color:var(--muted);}
+.modal-stat b{display:block;font-size:16px;color:var(--text);margin-bottom:2px;}
+.modal-btns{display:flex;gap:8px;justify-content:center;}
+.modal-btn{padding:10px 20px;border-radius:10px;border:none;font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;transition:opacity .2s;}
+.modal-btn.primary{background:var(--teal-d);color:#fff;}
+.modal-btn.secondary{background:var(--sand);color:var(--text);}
+
+/* Coin pop animation */
+.coin-pop{
+  position:absolute;font-size:14px;font-weight:800;color:var(--teal-d);
+  pointer-events:none;z-index:50;white-space:nowrap;
+  animation:coinFloat 1.5s ease-out forwards;
+}
+@keyframes coinFloat{0%{opacity:1;transform:translateY(0) scale(1);}70%{opacity:1;}100%{opacity:0;transform:translateY(-60px) scale(0.8);}}
+
+/* Responsive */
+@media(max-width:600px){
+  #game-wrap{max-height:100vh;border-radius:0;}
+  #side{width:175px;}
+  #mobile-controls{display:block;}
+  #scan-fab{display:flex;}
+  #bottombar{display:none;}
+}
+@media(max-width:400px){#side{width:155px;}#game-wrap{max-height:100vh;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen" class="screen active">
+  <div class="login-hero">
+    <span class="login-hero-emoji">🏢</span>
+    <h1>Inspector Postural</h1>
+    <p>La empresa está en crisis por malas posturas.<br>¡Ayuda a los empleados y salva la productividad!</p>
+  </div>
+  <div class="login-box">
+    <input class="login-input" id="login-name" type="text" placeholder="Tu nombre de inspector" maxlength="30" autocomplete="off">
+    <button class="btn-primary" onclick="doLogin()"><i class="ti ti-player-play"></i> Comenzar misión</button>
+    <div class="login-links">
+      <button class="login-link" onclick="goTo('instr')">📋 Instrucciones</button>
+      <button class="login-link" onclick="goTo('catalog')">📚 Catálogo ergonómico</button>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<div id="menu-screen" class="screen">
+  <div class="menu-card">
+    <div class="menu-header">
+      <div class="menu-title">🏢 Inspector Postural</div>
+      <div class="menu-sub">Salva la productividad de la empresa</div>
+      <div class="menu-user" id="menu-user-label"></div>
+    </div>
+    <div class="menu-btns">
+      <button class="menu-btn" onclick="startGame()" style="border-color:var(--teal);background:#F0FBF6;">
+        <i class="ti ti-player-play" style="color:var(--teal-d);"></i>
+        <div><div>Jugar ahora</div><div class="menu-btn-desc">Compra implementos, mejora trabajadores, gana dinero</div></div>
+      </button>
+      <button class="menu-btn" onclick="goTo('instr')">
+        <i class="ti ti-list-check"></i>
+        <div><div>Instrucciones</div><div class="menu-btn-desc">Cómo jugar y mecánicas</div></div>
+      </button>
+      <button class="menu-btn" onclick="goTo('catalog')">
+        <i class="ti ti-notebook"></i>
+        <div><div>Catálogo Ergonómico</div><div class="menu-btn-desc">Guía de posturas saludables</div></div>
+      </button>
+      <button class="menu-btn" onclick="showScreen('login')" style="opacity:.6;">
+        <i class="ti ti-logout" style="color:var(--red);"></i>
+        <div><div style="color:var(--red);">Cambiar usuario</div></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- INSTRUCTIONS -->
+<div id="instr-screen" class="screen">
+  <div class="sticky-topbar">
+    <button class="back-btn-sticky" onclick="goBackFromInfo()"><i class="ti ti-arrow-left"></i> Volver</button>
+    <span class="sticky-title">📋 Instrucciones</span>
+  </div>
+  <div class="info-scroll">
+  <div class="info-card">
+    <div class="info-h1"><i class="ti ti-target" style="color:var(--teal-d);"></i> La Misión</div>
+    <div class="info-section">
+      <div class="info-list">
+        <div class="info-item"><i class="ti ti-building"></i><p>Eres el <b>Inspector Postural</b> de la empresa. La productividad está cayendo porque los empleados sufren dolencias por malas posturas.</p></div>
+        <div class="info-item"><i class="ti ti-coin" style="color:var(--gold);"></i><p><b>Compra implementos ergonómicos</b> para cada empleado. Al mejorar su salud, <b>ganas dinero de recompensa</b> para ayudar a más personas.</p></div>
+        <div class="info-item"><i class="ti ti-trending-up" style="color:var(--teal-d);"></i><p>Lleva la <b>Productividad General</b> al 95%+ e inspecciona a todos para ganar. ¡Si cae a 0%, pierdes!</p></div>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="info-sh">💰 Economía del Juego</div>
+      <div class="info-list">
+        <div class="info-item"><i class="ti ti-cash"></i><p>Empiezas con <b>$3,000</b>. Cada mejora que apliques te da una <b>recompensa</b> que recupera parte de la inversión.</p></div>
+        <div class="info-item"><i class="ti ti-star"></i><p>Las mejoras tienen <b>recompensas mayores</b> cuando el empleado está en estado crítico (rojo). ¡Prioriza los casos graves!</p></div>
+        <div class="info-item"><i class="ti ti-clock"></i><p>La salud baja con el tiempo. Si dejas a un empleado sin atender, su productividad arrastrará a toda la empresa.</p></div>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="info-sh">🎮 Controles</div>
+      <div class="info-list">
+        <div class="info-item"><i class="ti ti-keyboard"></i><p><span class="kbd2">W A S D</span> o <span class="kbd2">↑ ↓ ← →</span> para mover. <span class="kbd2">E</span> para escanear empleado cercano. <span class="kbd2">Clic</span> para mover e inspeccionar.</p></div>
+        <div class="info-item"><i class="ti ti-device-mobile"></i><p>En móvil: usa el <b>D-Pad</b> para moverte, <b>SCAN</b> para escanear, o toca un empleado directamente.</p></div>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="info-sh">🚦 Estados de Salud</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#fff;border-radius:8px;border:1.5px solid var(--border);font-size:12px;"><div style="width:12px;height:12px;border-radius:50%;background:#1D9E75;"></div>Verde (70–100%) — Productivo</div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#fff;border-radius:8px;border:1.5px solid var(--border);font-size:12px;"><div style="width:12px;height:12px;border-radius:50%;background:#EF9F27;"></div>Naranja (45–69%) — Regular</div>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#fff;border-radius:8px;border:1.5px solid var(--border);font-size:12px;"><div style="width:12px;height:12px;border-radius:50%;background:#E24B4A;"></div>Rojo (&lt;45%) — ¡Crítico!</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- CATALOG -->
+<div id="catalog-screen" class="screen">
+  <div class="sticky-topbar">
+    <button class="back-btn-sticky" onclick="goBackFromInfo()"><i class="ti ti-arrow-left"></i> Volver</button>
+    <span class="sticky-title">📚 Catálogo Ergonómico</span>
+  </div>
+  <div class="info-scroll">
+  <div class="info-card" style="max-width:700px;">
+    <div class="info-h1"><i class="ti ti-notebook" style="color:var(--teal-d);"></i> Guía de Ergonomía Postural</div>
+    <div class="cat-grid" id="catalog-grid"></div>
+  </div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game-screen" class="screen" style="align-items:stretch;">
+  <div id="game-wrap">
+    <div id="mission-bar">
+      <i class="ti ti-target"></i>
+      <span id="mission-text">🎯 MISIÓN: Compra implementos ergonómicos → mejora la salud de los empleados → gana dinero de recompensa → lleva la productividad al 95%</span>
+    </div>
+    <div id="prod-bar-wrap"><div id="prod-bar"></div></div>
+    <div id="topbar">
+      <div id="tb-brand">
+        <div id="tb-icon"><i class="ti ti-scan"></i></div>
+        <div><div id="tb-title">Inspector Postural</div><div id="tb-sub">Salva la Empresa</div></div>
+      </div>
+      <div id="tb-stats">
+        <div class="ts" id="stat-budget"><i class="ti ti-coin" style="color:#FAC775;" aria-hidden="true"></i> <b id="hb">$3,000</b></div>
+        <div class="ts"><i class="ti ti-heart" style="color:#ED93B1;" aria-hidden="true"></i> <b id="hh">—</b></div>
+        <div class="ts"><i class="ti ti-trending-up" style="color:var(--teal);" aria-hidden="true"></i> <b id="hp">—</b></div>
+        <div class="ts"><i class="ti ti-clipboard-check" style="color:#85B7EB;" aria-hidden="true"></i> <b id="hi">0</b></div>
+        <div class="ts" style="cursor:pointer;" onclick="showMenuFromGame()"><i class="ti ti-menu-2" style="color:rgba(255,255,255,.7);"></i></div>
+      </div>
+    </div>
+    <div id="layout">
+      <div id="map-wrap">
+        <canvas id="c"></canvas>
+        <button id="scan-fab" onclick="scanNearest()"><i class="ti ti-scan"></i></button>
+      </div>
+      <div id="side">
+        <div id="side-tabs">
+          <button class="stab on" onclick="sv('w')" title="Empleados">👥 Equipo</button>
+          <button class="stab" onclick="sv('s')" title="Escaneo">🔬 Scan</button>
+          <button class="stab" onclick="sv('t')" title="Tienda">🛒 Tienda</button>
+        </div>
+        <div id="side-body">
+          <div class="notif" id="notif"></div>
+          <div id="vw"></div>
+          <div id="vs" style="display:none"></div>
+          <div id="vt" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+    <div id="bottombar">
+      <span class="kbd">W A S D</span> mover &nbsp;
+      <span class="kbd">E</span> escanear &nbsp;
+      <span class="kbd">clic</span> inspeccionar &nbsp;·&nbsp;
+      💰 <b style="color:#FAC775;">Al mejorar un empleado, ganas dinero de recompensa</b>
+    </div>
+    <div id="mobile-controls">
+      <div id="dpad">
+        <div></div>
+        <button class="dpad-btn" ontouchstart="kstart('w')" ontouchend="kstop('w')" onmousedown="kstart('w')" onmouseup="kstop('w')">▲</button>
+        <div></div>
+        <button class="dpad-btn" ontouchstart="kstart('a')" ontouchend="kstop('a')" onmousedown="kstart('a')" onmouseup="kstop('a')">◀</button>
+        <button class="dpad-btn dpad-center" ontouchstart="scanNearest()" onmousedown="scanNearest()">SCAN</button>
+        <button class="dpad-btn" ontouchstart="kstart('d')" ontouchend="kstop('d')" onmousedown="kstart('d')" onmouseup="kstop('d')">▶</button>
+        <div></div>
+        <button class="dpad-btn" ontouchstart="kstart('s')" ontouchend="kstop('s')" onmousedown="kstart('s')" onmouseup="kstop('s')">▼</button>
+        <div></div>
+      </div>
+    </div>
+    <div class="modal-overlay" id="modal-gameover">
+      <div class="modal-box">
+        <div class="modal-icon" id="modal-icon"></div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-msg" id="modal-msg"></div>
+        <div class="modal-stats" id="modal-stats"></div>
+        <div class="modal-btns">
+          <button class="modal-btn primary" onclick="startGame()">🔄 Reiniciar</button>
+          <button class="modal-btn secondary" onclick="showMenuFromGame()">🏠 Menú</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== CATALOG =====
+const CAT=[
+  {icon:'ti-armchair',color:'#7F77DD',bg:'#EEEDff',name:'Silla y Espalda',area:'Postura General',
+   tips:['Ajusta para que pies descansen planos en el suelo.','Rodillas a 90°, respaldo lumbar activo.','Apoyabrazos al nivel del escritorio.'],
+   warns:['No sentarse en el borde.','No cruzar piernas por largo tiempo.']},
+  {icon:'ti-device-desktop',color:'#378ADD',bg:'#EBF4FF',name:'Monitor y Cuello',area:'Visión y Cervical',
+   tips:['Monitor al nivel de los ojos, a 50–70 cm.','Inclinar 10°–20° hacia atrás.'],
+   warns:['No mirar hacia arriba o abajo prolongadamente.','No usar laptop sin soporte más de 30 min.']},
+  {icon:'ti-keyboard',color:'#5DCAA5',bg:'#E7F8F2',name:'Teclado y Muñecas',area:'Miembros Superiores',
+   tips:['Teclado al nivel de los codos.','Muñecas rectas y neutras al escribir.'],
+   warns:['No doblar las muñecas hacia arriba.','No apoyar muñecas mientras escribes activamente.']},
+  {icon:'ti-eye',color:'#EF9F27',bg:'#FEF7E7',name:'Visión y Ojos',area:'Fatiga Visual',
+   tips:['Regla 20-20-20: cada 20 min, mira 20 seg a 6 metros.','Ajusta brillo al nivel del ambiente.'],
+   warns:['No trabajar con luz de fondo directa.','No ignorar visión borrosa o cefaleas.']},
+  {icon:'ti-shoe',color:'#D4537E',bg:'#FDEDF3',name:'Piernas y Circulación',area:'Extremidades',
+   tips:['Reposapiés si los pies no llegan al suelo.','Mueve las piernas cada 30 minutos.'],
+   warns:['No cruzar piernas por mucho tiempo.','No permanecer sentado más de 2 horas.']},
+  {icon:'ti-walk',color:'#1D9E75',bg:'#E7F8F2',name:'Pausas Activas',area:'Bienestar General',
+   tips:['5–10 min de pausa por cada hora de trabajo.','Estiramientos de cuello, hombros y espalda.'],
+   warns:['No trabajar más de 2 horas sin moverse.','No hacer pausas solo cuando ya duele.']},
+];
+document.getElementById('catalog-grid').innerHTML=CAT.map(c=>`
+  <div class="cat-item">
+    <div class="cat-item-top">
+      <div class="cat-icon" style="background:${c.bg};"><i class="ti ${c.icon}" style="color:${c.color};"></i></div>
+      <div><div class="cat-name">${c.name}</div><div class="cat-area">${c.area}</div></div>
+    </div>
+    ${c.tips.map(t=>`<div class="cat-tip">${t}</div>`).join('')}
+    ${c.warns.map(w=>`<div class="cat-warn">${w}</div>`).join('')}
+  </div>`).join('');
+
+// ===== NAVIGATION =====
+let prevScreen='login',currentUser='Inspector';
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id+'-screen').classList.add('active');}
+function goTo(id){const cur=document.querySelector('.screen.active');if(cur)prevScreen=cur.id.replace('-screen','');showScreen(id);}
+function goBackFromInfo(){showScreen(prevScreen||'login');}
+function showMenuFromGame(){prevScreen='menu';showScreen('menu');}
+function doLogin(){
+  currentUser=document.getElementById('login-name').value.trim()||'Inspector';
+  document.getElementById('menu-user-label').textContent='👋 Hola, '+currentUser+'!';
+  prevScreen='menu';showScreen('menu');
+}
+document.getElementById('login-name').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ===== GAME STATE =====
+const T=38;
+let cv,ctx,COLS,ROWS,budget,totalEarned,inspections,curView,scanTarget,tick,last,gameActive,gameEnded,loopRunning;
+const keys={};
+const player={x:5,y:6};
+let workers=[],map2=[];
+
+const NAMES=['Ana','Luis','María','Carlos','Sofía','Pedro','Laura','Diego'];
+const AREAS=['Call Center','Diseño','RR.HH.','Administración','Recepción'];
+const PCOLORS=['#D4537E','#378ADD','#EF9F27','#1D9E75','#7F77DD','#D85A30','#378ADD','#D4537E'];
+const HCOLORS=['#D4537E','#EF9F27','#1D9E75','#7F77DD','#D85A30','#378ADD','#5DCAA5','#BA7517'];
+
+function mkW(id,tx,ty){
+  return{id,name:NAMES[id],area:AREAS[id%AREAS.length],tx,ty,pc:PCOLORS[id],hc:HCOLORS[id],
+    posture:{back:20+Math.random()*60,neck:20+Math.random()*60,wrist:25+Math.random()*55,eyes:20+Math.random()*60,legs:20+Math.random()*55},
+    items:[],inspected:false,fixed:false,totalHealth:0};
+}
+
+// ===== MAP BUILDER =====
+// Tile types: 0=floor, 1=wall, 2=desk, 3=rug/zone
+function buildMap(){
+  map2.length=0;
+  for(let r=0;r<ROWS;r++){map2[r]=[];for(let c=0;c<COLS;c++)map2[r][c]=0;}
+  // Outer walls
+  for(let c=0;c<COLS;c++){map2[0][c]=1;map2[ROWS-1][c]=1;}
+  for(let r=0;r<ROWS;r++){map2[r][0]=1;map2[r][COLS-1]=1;}
+  // Interior dividing wall (horizontal, mid)
+  const mid=Math.floor(ROWS/2);
+  for(let c=1;c<COLS-1;c++)map2[mid][c]=1;
+  map2[mid][Math.floor(COLS*0.35)]=0; // door 1
+  map2[mid][Math.floor(COLS*0.65)]=0; // door 2
+  // Vertical divider top half
+  const vdiv=Math.floor(COLS*0.55);
+  for(let r=1;r<mid;r++)map2[r][vdiv]=1;
+  map2[Math.floor(mid*0.45)][vdiv]=0; // door
+  // Vertical divider bottom half
+  for(let r=mid+1;r<ROWS-1;r++)map2[r][vdiv]=1;
+  map2[Math.floor(mid+(ROWS-mid)*0.5)][vdiv]=0; // door
+  // Place worker desks
+  workers.forEach(w=>{if(map2[w.ty]&&w.tx<COLS)map2[w.ty][w.tx]=2;});
+}
+
+// ===== METRICS =====
+function avgH(w){const p=w.posture;return Math.round((p.back+p.neck+p.wrist+p.eyes+p.legs)/5);}
+function allAvg(){if(!workers.length)return 100;return Math.round(workers.reduce((s,w)=>s+avgH(w),0)/workers.length);}
+function prod(){return Math.min(100,Math.max(0,Math.round(allAvg()*0.9+10)));}
+function hCol(v){return v>=70?'#1D9E75':v>=45?'#EF9F27':'#E24B4A';}
+function isCrit(w){return avgH(w)<45;}
+
+// ===== SHOP ITEMS =====
+const shopItems=[
+  {id:'chair',name:'Silla ergonómica',cost:400,stat:'back',delta:30,icon:'ti-armchair',reward:220,desc:'Espalda'},
+  {id:'monitor',name:'Soporte monitor',cost:250,stat:'neck',delta:25,icon:'ti-device-desktop',reward:140,desc:'Cuello'},
+  {id:'keyboard',name:'Teclado ergonómico',cost:180,stat:'wrist',delta:25,icon:'ti-keyboard',reward:100,desc:'Muñecas'},
+  {id:'light',name:'Lámpara LED',cost:120,stat:'eyes',delta:30,icon:'ti-bulb',reward:65,desc:'Visión'},
+  {id:'footrest',name:'Reposapiés',cost:90,stat:'legs',delta:25,icon:'ti-shoe',reward:50,desc:'Piernas'},
+  {id:'break',name:'Pausas activas',cost:50,stat:'all',delta:8,icon:'ti-walk',reward:30,desc:'General'},
+];
+function sLbl(k){return{back:'Espalda',neck:'Cuello',wrist:'Muñecas',eyes:'Visión',legs:'Piernas'}[k]||k;}
+
+// ===== DRAWING =====
+function ts(){return Math.min(cv.width/(COLS||13),cv.height/(ROWS||13));}
+
+// Zone colors
+const ZONE_COLORS=['#D4A57433','#B8A0C820','#9FE1CB25','#F5C9A020','#F5A0C020','#C4D4F020'];
+const ZONE_NAMES=['📞 Call Center','🎨 Diseño','👥 RR.HH.','📊 Administración','🏢 Recepción','☕ Sala de Descanso'];
+
+function drawScene(){
+  if(!cv||!ctx)return;
+  const s=ts();
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const mid=Math.floor(ROWS/2);
+  // Draw zones first
+  const zones=[
+    {r:1,c:1,w:Math.floor(COLS*0.53)-1,h:mid-1,col:'#D4A57422',name:'📞 Call Center'},
+    {r:1,c:Math.floor(COLS*0.55)+1,w:COLS-Math.floor(COLS*0.55)-2,h:mid-1,col:'#B8A0C820',name:'🎨 Diseño'},
+    {r:mid+1,c:1,w:Math.floor(COLS*0.53)-1,h:ROWS-mid-2,col:'#9FE1CB20',name:'👥 RR.HH.'},
+    {r:mid+1,c:Math.floor(COLS*0.55)+1,w:COLS-Math.floor(COLS*0.55)-2,h:ROWS-mid-2,col:'#F5C9A020',name:'📊 Admin.'},
+  ];
+  // Base floor tiles
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      const t=map2[r][c];
+      const x=c*s,y=r*s;
+      if(t===1){
+        // Wall
+        ctx.fillStyle='#B8CEEA';ctx.fillRect(x,y,s,s);
+        ctx.fillStyle='#97AFCC';ctx.fillRect(x,y,s,4);
+        ctx.fillStyle='#CFE0F4';ctx.fillRect(x+2,y+2,s-4,2);
+        // Baseboard
+        ctx.fillStyle='rgba(0,0,0,.08)';ctx.fillRect(x,y+s-3,s,3);
+      } else if(t===2){
+        // Desk tile
+        const brow=r%2===0?'#F5E0B4':'#EDD89C';
+        ctx.fillStyle=brow;ctx.fillRect(x,y,s,s);
+        // Desk body
+        ctx.fillStyle='#C4956099';ctx.fillRect(x+3,y+4,s-6,s-7);
+        ctx.fillStyle='#A07040';ctx.fillRect(x+3,y+4,s-6,3);
+        // Monitor
+        ctx.fillStyle='#2a3a5a';ctx.fillRect(x+8,y+5,s-16,10);
+        ctx.fillStyle='#4a7aaa';ctx.fillRect(x+9,y+6,s-18,8);
+        ctx.fillStyle='rgba(136,204,255,.6)';ctx.fillRect(x+10,y+7,4,3);
+        // Papers
+        ctx.fillStyle='#fff';ctx.fillRect(x+4,y+s-10,8,6);
+        ctx.fillStyle='#eee';ctx.fillRect(x+13,y+s-10,5,6);
+      } else {
+        // Floor - checkered subtle
+        const shade=(r+c)%2===0?'#F5E0B4':'#EDD89C';
+        ctx.fillStyle=shade;ctx.fillRect(x,y,s,s);
+        ctx.strokeStyle='rgba(0,0,0,.04)';ctx.lineWidth=.5;ctx.strokeRect(x,y,s,s);
+      }
+    }
+  }
+  // Zone overlays
+  zones.forEach(z=>{
+    ctx.fillStyle=z.col;
+    ctx.fillRect(z.c*s,z.r*s,z.w*s,z.h*s);
+    // Zone label
+    const lx=(z.c+z.w/2)*s,ly=(z.r+.55)*s;
+    if(ly<cv.height-s){
+      ctx.font=`bold ${s*.1}px system-ui`;ctx.textAlign='center';
+      ctx.fillStyle='rgba(60,42,26,.4)';ctx.fillText(z.name,lx,ly);
+    }
+  });
+  // Draw door highlights
+  const door1c=Math.floor(COLS*0.35),door2c=Math.floor(COLS*0.65);
+  const midR=Math.floor(ROWS/2);
+  [[door1c,midR],[door2c,midR]].forEach(([c,r])=>{
+    ctx.fillStyle='rgba(93,202,165,.3)';ctx.fillRect(c*s+2,r*s+2,s-4,s-4);
+    ctx.strokeStyle='rgba(93,202,165,.8)';ctx.lineWidth=1.5;ctx.strokeRect(c*s+2,r*s+2,s-4,s-4);
+  });
+  workers.forEach(w=>drawWorker(w,s));
+  drawPlayer(s);
+  // HUD
+  document.getElementById('hb').textContent='$'+budget.toLocaleString();
+  document.getElementById('hh').textContent=allAvg()+'%';
+  document.getElementById('hp').textContent=prod()+'%';
+  document.getElementById('hi').textContent=inspections;
+  const p=prod();
+  document.getElementById('prod-bar').style.width=p+'%';
+  document.getElementById('prod-bar').style.background=hCol(p);
+}
+
+function drawWorker(w,s){
+  const px=(w.tx+.5)*s,py=(w.ty+.5)*s;
+  const h=avgH(w),col=hCol(h),crit=h<45;
+  const bob=(tick%40<20?0:1)*(w.id%2===0?1:-1)*0.5;
+
+  if(crit){
+    const t3=Date.now()/600;
+    ctx.save();ctx.globalAlpha=.2+.15*Math.sin(t3*Math.PI);
+    ctx.fillStyle='#E24B4A';
+    ctx.beginPath();ctx.arc(px,py+bob,s*.75,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+  if(scanTarget&&scanTarget.id===w.id){
+    ctx.strokeStyle='#5DCAA5';ctx.lineWidth=2;ctx.setLineDash([3,2]);
+    ctx.beginPath();ctx.arc(px,py+bob,s*.6,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,.1)';
+  ctx.beginPath();ctx.ellipse(px,py+s*.38+bob,s*.22,s*.07,0,0,Math.PI*2);ctx.fill();
+  // Body
+  ctx.fillStyle=w.pc;
+  ctx.beginPath();ctx.ellipse(px,py+s*.1+bob,s*.18,s*.22,0,0,Math.PI*2);ctx.fill();
+  // Arms
+  ctx.fillStyle=w.pc+'cc';
+  ctx.beginPath();ctx.ellipse(px-s*.19,py+s*.08+bob,s*.07,s*.14,-.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(px+s*.19,py+s*.08+bob,s*.07,s*.14,.3,0,Math.PI*2);ctx.fill();
+  // Hands
+  ctx.fillStyle='#F5C9A0';
+  ctx.beginPath();ctx.arc(px-s*.24,py+s*.18+bob,s*.05,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.24,py+s*.18+bob,s*.05,0,Math.PI*2);ctx.fill();
+  ctx.fillRect(px-s*.05,py-s*.09+bob,s*.1,s*.1);
+  // Head
+  ctx.beginPath();ctx.arc(px,py-s*.2+bob,s*.24,0,Math.PI*2);ctx.fill();
+  // Hair
+  ctx.fillStyle=w.hc;
+  ctx.beginPath();ctx.arc(px,py-s*.26+bob,s*.24,Math.PI,.1*Math.PI,false);ctx.fill();
+  ctx.beginPath();ctx.arc(px-s*.2,py-s*.24+bob,s*.1,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.2,py-s*.24+bob,s*.1,0,Math.PI*2);ctx.fill();
+  // Eyes
+  ctx.fillStyle='#2a1a0a';
+  ctx.beginPath();ctx.arc(px-s*.08,py-s*.18+bob,s*.04,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.08,py-s*.18+bob,s*.04,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.arc(px-s*.07,py-s*.19+bob,s*.015,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.09,py-s*.19+bob,s*.015,0,Math.PI*2);ctx.fill();
+  // Mouth expression
+  ctx.strokeStyle='#c07050';ctx.lineWidth=.8;
+  ctx.beginPath();
+  if(h>=70)ctx.arc(px,py-s*.12+bob,s*.05,.1*Math.PI,.9*Math.PI);
+  else if(h>=45){ctx.moveTo(px-s*.04,py-s*.12+bob);ctx.lineTo(px+s*.04,py-s*.12+bob);}
+  else ctx.arc(px,py-s*.09+bob,s*.05,1.1*Math.PI,1.9*Math.PI);
+  ctx.stroke();
+  // Health dot
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.arc(px+s*.28,py-s*.34+bob,s*.11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font=`bold ${s*.11}px system-ui`;ctx.textAlign='center';
+  ctx.fillText(h,px+s*.28,py-s*.3+bob);
+  // Status badge
+  if(crit){
+    ctx.fillStyle='#E24B4A';
+    ctx.beginPath();ctx.arc(px-s*.28,py-s*.34+bob,s*.11,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font=`bold ${s*.14}px system-ui`;ctx.textAlign='center';
+    ctx.fillText('!',px-s*.28,py-s*.28+bob);
+  } else if(w.fixed||avgH(w)>=80){
+    ctx.fillStyle='#1D9E75';
+    ctx.beginPath();ctx.arc(px-s*.28,py-s*.34+bob,s*.09,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(px-s*.32,py-s*.33+bob);ctx.lineTo(px-s*.28,py-s*.29+bob);ctx.lineTo(px-s*.22,py-s*.38+bob);ctx.stroke();
+  }
+  // Name tag
+  ctx.font=`${s*.09}px system-ui`;ctx.textAlign='center';
+  const nw=ctx.measureText(w.name).width+8;
+  ctx.fillStyle='rgba(255,248,238,.92)';
+  ctx.fillRect(px-nw/2,py+s*.44+bob,nw,12);
+  ctx.strokeStyle=crit?'#E24B4A':'#E8D5B0';ctx.lineWidth=.7;ctx.strokeRect(px-nw/2,py+s*.44+bob,nw,12);
+  ctx.fillStyle=crit?'#791F1F':'#5a3a1a';ctx.fillText(w.name,px,py+s*.44+bob+9);
+}
+
+function drawPlayer(s){
+  const px=(player.x+.5)*s,py=(player.y+.5)*s;
+  const bob=tick%30<15?0:1;
+  ctx.fillStyle='rgba(93,202,165,.15)';
+  ctx.beginPath();ctx.arc(px,py+bob,s*.65,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(0,0,0,.1)';
+  ctx.beginPath();ctx.ellipse(px,py+s*.38+bob,s*.2,s*.07,0,0,Math.PI*2);ctx.fill();
+  // Body uniform
+  ctx.fillStyle='#5DCAA5';
+  ctx.beginPath();ctx.ellipse(px,py+s*.1+bob,s*.18,s*.22,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1D9E75';ctx.fillRect(px-s*.03,py+bob,s*.06,s*.2);
+  ctx.fillStyle='#5DCAA5';
+  ctx.beginPath();ctx.ellipse(px-s*.2,py+s*.08+bob,s*.07,s*.14,-.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(px+s*.2,py+s*.08+bob,s*.07,s*.14,.3,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#F5C9A0';
+  ctx.beginPath();ctx.arc(px-s*.25,py+s*.18+bob,s*.05,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.25,py+s*.18+bob,s*.05,0,Math.PI*2);ctx.fill();
+  ctx.fillRect(px-s*.05,py-s*.09+bob,s*.1,s*.1);
+  ctx.beginPath();ctx.arc(px,py-s*.2+bob,s*.24,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#3a2010';
+  ctx.beginPath();ctx.arc(px,py-s*.26+bob,s*.24,Math.PI,.1*Math.PI,false);ctx.fill();
+  ctx.beginPath();ctx.arc(px-s*.2,py-s*.24+bob,s*.1,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.2,py-s*.24+bob,s*.1,0,Math.PI*2);ctx.fill();
+  // Inspector hat
+  ctx.fillStyle='#1D9E75';
+  ctx.fillRect(px-s*.22,py-s*.38+bob,s*.44,s*.06);
+  ctx.fillRect(px-s*.14,py-s*.5+bob,s*.28,s*.14);
+  ctx.fillStyle='#0F6E56';ctx.fillRect(px-s*.14,py-s*.5+bob,s*.28,s*.04);
+  ctx.fillStyle='#fff';ctx.font=`bold ${s*.07}px system-ui`;ctx.textAlign='center';
+  ctx.fillText('ERG',px,py-s*.4+bob);
+  // Eyes
+  ctx.fillStyle='#2a1a0a';
+  ctx.beginPath();ctx.arc(px-s*.08,py-s*.18+bob,s*.04,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.08,py-s*.18+bob,s*.04,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.arc(px-s*.07,py-s*.19+bob,s*.015,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+s*.09,py-s*.19+bob,s*.015,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#c07050';ctx.lineWidth=.8;
+  ctx.beginPath();ctx.arc(px,py-s*.12+bob,s*.05,.1*Math.PI,.9*Math.PI);ctx.stroke();
+  // Name tag
+  ctx.fillStyle='rgba(93,202,165,.95)';
+  ctx.font=`bold ${s*.08}px system-ui`;ctx.textAlign='center';
+  const lw=ctx.measureText(currentUser).width+10;
+  ctx.fillRect(px-lw/2,py+s*.44+bob,lw,13);
+  ctx.fillStyle='#04342C';ctx.fillText(currentUser,px,py+s*.44+bob+10);
+}
+
+// ===== MOVEMENT =====
+function canMove(c,r){
+  if(c<0||c>=COLS||r<0||r>=ROWS)return false;
+  if(!map2[r])return false;
+  if(map2[r][c]===1)return false;
+  if(workers.some(w=>w.tx===c&&w.ty===r))return false;
+  return true;
+}
+function nearWorker(){return workers.find(w=>Math.abs(w.tx-player.x)<=1&&Math.abs(w.ty-player.y)<=1);}
+
+function scanNearest(){
+  if(!gameActive||gameEnded)return;
+  const w=nearWorker();
+  if(w)inspW(w.id);else ntf('Acércate más a un empleado para escanearlo','warn');
+}
+
+// ===== COIN POP ANIMATION =====
+function showCoinPop(amount,positive=true){
+  const mapW=document.getElementById('map-wrap');
+  const s=ts();
+  const px=(player.x+.5)*s,py=(player.y+.5)*s;
+  const rect=cv.getBoundingClientRect();
+  const mapRect=mapW.getBoundingClientRect();
+  const div=document.createElement('div');
+  div.className='coin-pop';
+  div.style.left=(px*(rect.width/cv.width)+mapRect.left-mapW.getBoundingClientRect().left)+'px';
+  div.style.top=(py*(rect.height/cv.height)+mapRect.top-mapW.getBoundingClientRect().top-20)+'px';
+  div.style.color=positive?'#1D9E75':'#E24B4A';
+  div.textContent=(positive?'+$':'-$')+Math.abs(amount);
+  mapW.style.position='relative';
+  mapW.appendChild(div);
+  setTimeout(()=>div.remove(),1600);
+}
+
+// ===== SIDE PANEL =====
+function sv(v){
+  curView=v;
+  ['w','s','t'].forEach((id,i)=>{
+    document.getElementById('v'+id).style.display=id===v?'block':'none';
+    document.querySelectorAll('.stab')[i].classList.toggle('on',id===v);
+  });
+  if(v==='w')renderW();
+  if(v==='s')renderS();
+  if(v==='t')renderT();
+}
+window.sv=sv;
+
+function renderW(){
+  const sorted=[...workers].sort((a,b)=>avgH(a)-avgH(b));
+  let h=`<div style="font-size:9px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Empleados — toca para inspeccionar</div>`;
+  sorted.forEach(w=>{
+    const hv=avgH(w),col=hCol(hv),crit=hv<45,fixed2=hv>=80&&w.items.length>0;
+    const sel=scanTarget&&scanTarget.id===w.id;
+    h+=`<div class="wcard${sel?' sel':''}${crit?' crit':''}${fixed2?' fixed':''}" onclick="inspW(${w.id})">
+      <div class="wcard-top">
+        <div class="wav" style="background:${w.pc}22;color:${w.pc};border-color:${w.pc}44">${w.name[0]}</div>
+        <div style="flex:1"><div class="wname">${w.name}</div><div class="warea">${w.area}</div></div>
+        ${crit?`<span class="alert-badge">⚠ CRIT</span>`:fixed2?`<span class="fixed-badge">✓ OK</span>`:''}
+      </div>
+      <div class="hbar"><div class="hfill" style="width:${hv}%;background:${col}"></div></div>
+      <div class="hlbl" style="color:${col}">${hv}% salud</div>
+    </div>`;
+  });
+  document.getElementById('vw').innerHTML=h;
+}
+
+function inspW(id){
+  if(!gameActive||gameEnded)return;
+  const w=workers.find(ww=>ww.id===id);
+  if(!w)return;
+  scanTarget=w;
+  if(!w.inspected){w.inspected=true;inspections++;}
+  sv('s');
+}
+window.inspW=inspW;
+
+function renderS(){
+  const el=document.getElementById('vs');
+  if(!scanTarget){
+    el.innerHTML=`<div style="text-align:center;padding:28px 0;color:var(--muted);font-size:12px;line-height:1.7">
+      <i class="ti ti-scan" style="font-size:36px;display:block;margin-bottom:10px;color:var(--teal)"></i>
+      Selecciona un empleado<br>de la lista o tócalo<br>en el mapa</div>`;return;
+  }
+  const w=scanTarget,p=w.posture,hv=avgH(w),col=hCol(hv);
+  const cls=hv>=70?'b-ok':hv>=45?'b-warn':'b-bad';
+  const lbl=hv>=70?'Productivo':hv>=45?'Regular':'¡Crítico!';
+  let metrics='';
+  Object.entries({back:'Espalda',neck:'Cuello',wrist:'Muñecas',eyes:'Visión',legs:'Piernas'}).forEach(([k,label])=>{
+    const v=Math.round(p[k]),c=hCol(v);
+    metrics+=`<div class="smetric"><span class="sml">${label}</span>
+      <div class="smbw"><div class="smb" style="width:${v}%;background:${c}"></div></div>
+      <span class="smv" style="color:${c}">${v}%</span></div>`;
+  });
+  let fixes='',allGood=true;
+  shopItems.forEach(item=>{
+    if(w.items.includes(item.id))return;
+    const sv2=item.stat==='all'?hv:Math.round(p[item.stat]);
+    if(sv2>=90)return;
+    allGood=false;
+    const isCritWorker=isCrit(w);
+    const bonusReward=isCritWorker?Math.round(item.reward*1.5):item.reward;
+    const canAfford=budget>=item.cost;
+    fixes+=`<button class="fix-btn" onclick="applyFix('${item.id}')" ${canAfford?'':'disabled'}>
+      <i class="ti ${item.icon}" style="font-size:13px;color:var(--teal)"></i>
+      <span>${item.name}</span>
+      <span style="margin-left:auto;display:flex;align-items:center;gap:4px">
+        <span style="font-size:10px;color:var(--teal-d);font-weight:700">+$${bonusReward}</span>
+        <span class="fp">$${item.cost}</span>
+      </span>
+    </button>`;
+  });
+  if(allGood)fixes=`<div style="font-size:11px;color:var(--teal-d);padding:8px;background:#E1F5EE;border-radius:8px;text-align:center;"><i class="ti ti-check"></i> ¡Empleado optimizado!</div>`;
+  else fixes=`<div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-weight:700">💰 Al comprar, recibes recompensa</div>`+fixes;
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1.5px solid var(--border)">
+      <div class="wav" style="width:34px;height:34px;background:${w.pc}22;color:${w.pc};border-color:${w.pc}44;font-size:14px">${w.name[0]}</div>
+      <div><div style="font-size:12px;font-weight:800;color:var(--text)">${w.name}</div>
+      <div style="font-size:10px;color:var(--muted)">${w.area}</div></div>
+      <span class="badge ${cls}" style="margin-left:auto">${lbl}</span>
+    </div>
+    <div style="font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Indicadores de Salud</div>
+    ${metrics}
+    <div style="font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:10px 0 6px">Implementos Ergonómicos</div>
+    ${fixes}`;
+}
+
+window.applyFix=function(itemId){
+  if(!scanTarget||!gameActive)return;
+  const item=shopItems.find(i=>i.id===itemId);
+  if(!item||budget<item.cost)return;
+  const wasCrit=isCrit(scanTarget);
+  budget-=item.cost;
+  if(item.stat==='all')Object.keys(scanTarget.posture).forEach(k=>{scanTarget.posture[k]=Math.min(100,scanTarget.posture[k]+item.delta);});
+  else scanTarget.posture[item.stat]=Math.min(100,scanTarget.posture[item.stat]+item.delta);
+  scanTarget.items.push(item.id);
+  // Reward — bonus if was critical
+  const reward=wasCrit?Math.round(item.reward*1.5):item.reward;
+  budget+=reward;
+  totalEarned+=reward;
+  // Animate stat budget
+  const statEl=document.getElementById('stat-budget');
+  statEl.classList.remove('earning');void statEl.offsetWidth;statEl.classList.add('earning');
+  // Coin pop
+  showCoinPop(reward,true);
+  ntf(`✅ ${item.name} aplicada a ${scanTarget.name}. +$${reward} de recompensa${wasCrit?' (¡bonus crítico!)':''}!`,'ok');
+  renderS();renderW();drawScene();
+  checkWin();
+};
+
+function renderT(){
+  let h=`<div style="font-size:11px;color:var(--light);margin-bottom:10px">Presupuesto disponible: <b style="color:var(--text)">$${budget.toLocaleString()}</b></div>
+  <div style="font-size:10px;color:var(--teal-d);margin-bottom:10px;padding:6px 8px;background:#E1F5EE;border-radius:8px;">💡 Al aplicar mejoras ganas recompensa. Casos críticos dan bonus extra.</div>`;
+  shopItems.forEach(item=>{
+    h+=`<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid #F5E0B4">
+      <i class="ti ${item.icon}" style="font-size:15px;color:var(--teal)"></i>
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:700;color:var(--text)">${item.name}</div>
+        <div style="font-size:9px;color:var(--muted)">${item.desc} +${item.delta}pts → <span style="color:var(--teal-d);font-weight:700">Recompensa: $${item.reward}</span></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--light)">$${item.cost}</div>
+    </div>`;
+  });
+  h+=`<div style="font-size:10px;color:var(--muted);margin-top:8px">Aplica las mejoras desde 🔬 Scan con un empleado seleccionado.</div>`;
+  document.getElementById('vt').innerHTML=h;
+}
+
+function ntf(msg,type='ok'){
+  const n=document.getElementById('notif');
+  n.textContent=msg;n.className='notif on'+(type==='warn'?' warn':type==='bad'?' bad':'');
+  clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('on'),3000);
+}
+
+// ===== WIN/LOSE =====
+function checkWin(){
+  if(gameEnded)return;
+  const p=prod();
+  if(p>=95&&inspections>=workers.length){
+    gameEnded=true;gameActive=false;
+    document.getElementById('modal-stats').innerHTML=
+      `<div class="modal-stat"><b>${p}%</b>Productividad</div>
+       <div class="modal-stat"><b>$${budget.toLocaleString()}</b>Presupuesto final</div>
+       <div class="modal-stat"><b>$${totalEarned.toLocaleString()}</b>Total ganado</div>
+       <div class="modal-stat"><b>${inspections}</b>Inspeccionados</div>`;
+    showModal('🏆','¡Empresa Salvada!',`¡Felicitaciones, ${currentUser}! Llevaste la productividad al ${p}%. Todos los empleados están ergonómicamente optimizados.`);
+  }
+}
+function checkLose(){
+  if(gameEnded)return;
+  const p=prod();
+  if(p<=5){
+    gameEnded=true;gameActive=false;
+    document.getElementById('modal-stats').innerHTML=`<div class="modal-stat"><b>${p}%</b>Productividad</div>`;
+    showModal('😰','La empresa colapsó',`La productividad cayó al ${p}%. Los empleados estaban en condiciones críticas. ¡Administra mejor el tiempo!`);
+  }
+  if(budget<=0&&prod()<60){
+    gameEnded=true;gameActive=false;
+    document.getElementById('modal-stats').innerHTML=`<div class="modal-stat"><b>$0</b>Presupuesto</div><div class="modal-stat"><b>${prod()}%</b>Productividad</div>`;
+    showModal('💸','Sin presupuesto','Se agotó el dinero. Recuerda: cada mejora da recompensa. ¡Reinvierte estratégicamente!');
+  }
+}
+function showModal(icon,title,msg){
+  document.getElementById('modal-icon').textContent=icon;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  document.getElementById('modal-gameover').classList.add('show');
+}
+
+// ===== INPUT =====
+document.addEventListener('keydown',e=>{
+  keys[e.key.toLowerCase()]=true;
+  const gs=document.getElementById('game-screen');
+  if(!gs||!gs.classList.contains('active'))return;
+  if(e.key==='e'||e.key==='E')scanNearest();
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d',' '].includes(e.key))e.preventDefault();
+});
+document.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+function kstart(k){keys[k]=true;}
+function kstop(k){keys[k]=false;}
+window.kstart=kstart;window.kstop=kstop;
+window.scanNearest=scanNearest;
+
+// ===== CANVAS CLICK =====
+function setupCanvasEvents(){
+  if(!cv)return;
+  const handler=e=>{
+    if(!gameActive||gameEnded)return;
+    const rect=cv.getBoundingClientRect();
+    const s=ts();const scaleX=cv.width/rect.width;
+    let cx,cy;
+    if(e.touches){
+      e.preventDefault();
+      cx=Math.floor((e.touches[0].clientX-rect.left)*scaleX/s);
+      cy=Math.floor((e.touches[0].clientY-rect.top)*scaleX/s);
+    } else {
+      cx=Math.floor((e.clientX-rect.left)*scaleX/s);
+      cy=Math.floor((e.clientY-rect.top)*scaleX/s);
+    }
+    const w=workers.find(ww=>ww.tx===cx&&ww.ty===cy);
+    if(w){inspW(w.id);return;}
+    if(canMove(cx,cy)){player.x=cx;player.y=cy;drawScene();}
+  };
+  cv.addEventListener('click',handler);
+  cv.addEventListener('touchstart',handler,{passive:false});
+}
+
+// ===== GAME LOOP =====
+function loop(ts2){
+  if(!gameActive&&!gameEnded){loopRunning=false;return;}
+  requestAnimationFrame(loop);
+  tick++;
+  if(ts2-last<80)return;last=ts2;
+  if(gameActive&&!gameEnded){
+    let nx=player.x,ny=player.y;
+    if(keys['w']||keys['arrowup'])ny--;
+    if(keys['s']||keys['arrowdown'])ny++;
+    if(keys['a']||keys['arrowleft'])nx--;
+    if(keys['d']||keys['arrowright'])nx++;
+    if((nx!==player.x||ny!==player.y)&&canMove(nx,ny)){player.x=nx;player.y=ny;}
+    // Health decay
+    workers.forEach(w=>Object.keys(w.posture).forEach(k=>{w.posture[k]=Math.max(0,w.posture[k]-.012);}));
+    checkLose();
+  }
+  drawScene();
+  if(curView==='w')renderW();
+  if(curView==='s'&&scanTarget)renderS();
+}
+
+// ===== START GAME =====
+function startGame(){
+  showScreen('game');
+  setTimeout(()=>{
+    cv=document.getElementById('c');
+    if(!cv)return;
+    ctx=cv.getContext('2d');
+    const wrap=document.getElementById('map-wrap');
+    cv.width=wrap.clientWidth||500;
+    cv.height=wrap.clientHeight||460;
+    COLS=Math.max(11,Math.floor(cv.width/T));
+    ROWS=Math.max(10,Math.floor(cv.height/T));
+    budget=3000;totalEarned=0;inspections=0;curView='w';
+    scanTarget=null;tick=0;last=0;gameActive=true;gameEnded=false;
+    player.x=Math.floor(COLS*0.3);player.y=Math.floor(ROWS*0.45);
+    // Place workers in zones
+    const leftZone=Math.floor(COLS*0.53);
+    const rightStart=Math.floor(COLS*0.55)+1;
+    const rightEnd=COLS-2;
+    const mid=Math.floor(ROWS/2);
+    function rndCol(a,b){return a+1+Math.floor(Math.random()*(b-a-1));}
+    workers=[
+      mkW(0,rndCol(1,leftZone-1),2),
+      mkW(1,rndCol(1,leftZone-1),Math.floor(mid*0.6)),
+      mkW(2,rndCol(1,leftZone-1),Math.floor(mid*0.85)),
+      mkW(3,rndCol(rightStart,rightEnd),2),
+      mkW(4,rndCol(rightStart,rightEnd),Math.floor(mid*0.6)),
+      mkW(5,rndCol(1,leftZone-1),mid+2),
+      mkW(6,rndCol(1,leftZone-1),mid+Math.floor((ROWS-mid)*0.6)),
+      mkW(7,rndCol(rightStart,rightEnd),mid+2),
+    ];
+    document.getElementById('modal-gameover').classList.remove('show');
+    buildMap();
+    setupCanvasEvents();
+    sv('w');
+    renderW();drawScene();
+    if(!loopRunning){loopRunning=true;requestAnimationFrame(loop);}
+  },80);
+}
+
+window.startGame=startGame;
+window.showMenuFromGame=function(){prevScreen='menu';showScreen('menu');};
+window.restartGame=startGame;
+
+window.addEventListener('resize',()=>{
+  if(!cv)return;
+  const gs=document.getElementById('game-screen');
+  if(gs&&gs.classList.contains('active')){
+    const wrap=document.getElementById('map-wrap');
+    if(!wrap)return;
+    cv.width=wrap.clientWidth;cv.height=wrap.clientHeight;
+    COLS=Math.max(11,Math.floor(cv.width/T));
+    ROWS=Math.max(10,Math.floor(cv.height/T));
+    buildMap();drawScene();
+  }
+});
+</script>
+</body>
+</html>
